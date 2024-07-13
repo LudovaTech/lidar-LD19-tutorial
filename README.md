@@ -6,6 +6,11 @@ LD19 is a lowcost lidar that we (LudovaTech) used to the Robocup Junior competit
 >
 > All this documentation and code are licensed under CC BY-SA 4.0, with the exception of images and other files.
 
+## Overview
+
+![lidar LD19](./images/lidar-LD19.jpg)
+
+TODO
 
 # Links
 
