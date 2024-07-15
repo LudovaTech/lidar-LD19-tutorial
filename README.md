@@ -55,7 +55,7 @@ The LD19 uses one-way communication. Once it is operating stably, it begins to s
 | VerLen | 1 Byte | Always `0x2C` | The upper three bits of the byte specify the packet type, which is currently set to 1. The lower five bits represent the number of measurement points in a packet, which is fixed at 12. |
 | Speed  | 2 Bytes | [least significant bit][LSB] before, </br> *unit: degrees per second* | Indicate the speed of the lidar |
 | Start Angle | 2 Bytes | [least significant bit][LSB] before, </br> *unit: 0.01 degrees* | Indicate the starting angle of the data packet point |
-| **Data** | 3 * 12 Bytes | ... | Please refer to the next section for further details. |
+| **Data** | 3 * 12 Bytes | ... | Please refer to the [next section](#understanding-data-packet) for further details. |
 | End angle | 2 Bytes | [least significant bit][LSB] before, </br> *unit: 0.01 degrees* | Indicate the end angle of the data packet point |
 | Timestamp | 2 Bytes | [least significant bit][LSB] before, </br> *unit: milliseconds*, </br> Reset to zero upon reaching `30000` | Indicating the timestamp value of the data packet |
 | CRC check | 1 Bytes | Verification of all previous data *except itself* | Verifies data transfer for accuracy and completeness, ensuring error-free results. |
@@ -73,11 +73,44 @@ Each of the 12 mesurement points per packet is composed of 2 values :
 | Intensity | 1 Byte | reflects the light reflection intensity | As the intensity increases, the signal intensity value also increases; conversely, as the intensity decreases, the signal intensity value decreases. For a white object within 6 meters, the typical signal strength value is approximately 200. |
 
 > [!IMPORTANT]
-> The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation). (Don't worry, it's very simple.)
+> The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#implementation). (Don't worry, it's very simple.)
 
 > [!NOTE]
 > The LD19 employs a left-handed coordinate system with the rotation center at the origin. The front of the sensor is designated as the zero-degree direction, and the rotation angle increases clockwise, as illustrated in the figure below. </br>
 > ![Lidar Coordinate System](./images/lidar-coordinate-system.jpg)
+
+## Implementation
+
+### Linear Interpolation
+
+Linear interpolation is in this case a method of estimating values that lie between two known values. Here, it assumes that all points are at the same distance from each other.
+All you need to do is :
+
+- Calculate the distance `angleStep` between each point : `(endAngle - startAngle) / nbr_points`. `nbr_points` is always equal to 12 with this lidar.
+- calculate the angle for point `n` : `startAngle + (angleStep * n)`
+- In reality, the calculations are slightly more complex than indicated in the documentation, particularly to handle the transition from 359° to 0°.
+
+Here is our C++ implementation, which includes the 359° - 0° transition :
+
+```c++
+// Calculates the step size between startAngle and endAngle (in tenths of a degree),
+// divided by lenMinusOne, which represents the number of steps minus one.
+// Assumes angles are within 0 to 3599 (representing 0.0° to 359.9°).
+uint16_t angleStep(uint16_t startAngle, uint16_t endAngle, unsigned int lenMinusOne) {
+  if (startAngle <= endAngle) {
+    return (endAngle - startAngle) / lenMinusOne;
+  } else {
+    return (36000 + endAngle - startAngle) / lenMinusOne;
+  }
+}
+
+// Calculates the angle (in tenths of a degree) corresponding to a given step index,
+// starting from startAngle, with each step being step tenths of a degree.
+// Returns the angle wrapped within 0 to 3599 (representing 0.0° to 359.9°).
+uint16_t angleFromStep(uint16_t startAngle, uint16_t step, unsigned int indice) {
+  return (startAngle + (step * indice)) % 36000;
+}
+```
 
 ## Links
 
