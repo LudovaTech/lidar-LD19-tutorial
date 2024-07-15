@@ -2,10 +2,15 @@
 
 LD19 is a lowcost lidar that we (LudovaTech) used to the Robocup Junior competition. We find out that it works very well for our needs but that there was no good documentation or tutorial on the web. We succed to make it work after some long days of work. Here is how we did it :
 
+> [!TIP]
+> This tutorial aims to guide you in retrieving lidar data from a microcontroller in a format that enables immediate processing onboard. If you just need to check that your lidar is working, [these documents](#links) provide instructions on using their software to view the data on your computer.
+
 > [!NOTE]
 > This is not an official documentation.
 >
 > All this documentation and code are licensed under CC BY-SA 4.0, with the exception of images and other files.
+
+If you notice something missing or have any ideas, please feel free to open a [GitHub issue](https://github.com/LudovaTech/lidar-LD19-tutorial/issues/new).
 
 ## Overview
 
@@ -325,6 +330,8 @@ uint16_t angleFromStep(uint16_t startAngle, uint16_t step, unsigned int indice) 
   return (startAngle + (step * indice)) % 36000;
 }
 ```
+
+To use the LD19 lidar with your board and this code, simply define `SerialLidar` (with `#define`) as the appropriate Serial object for your board. Then, call the `getPoints` function to receive a `std::vector` containing all detected points from the lidar.
 
 You can find all our source code available at [this location](https://github.com/LudovaTech/robot-prog-public).
 
