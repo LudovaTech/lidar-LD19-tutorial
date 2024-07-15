@@ -45,18 +45,35 @@ The LD19 uses UART protocol for data communication with the following settings:
 
 ## Data protocol
 
+### Data packet format
+
 The LD19 uses one-way communication. Once it is operating stably, it begins to send measurement data packets automatically, without requiring any commands. There is 12 points per packet. The format of these measurement packets is illustrated in the table below.
 
 |  Name  | Length | Type or Value | Description |
 | :----: | :----: | :-----------: | :---------- |
 | Header | 1 Byte | Always `0x54` | Indicating the start of the data packet |
 | VerLen | 1 Byte | Always `0x2C` | The upper three bits of the byte specify the packet type, which is currently set to 1. The lower five bits represent the number of measurement points in a packet, which is fixed at 12. |
-| Speed  | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: degrees per second* | Indicate the speed of the lidar |
-| Start Angle | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: 0.01 degrees* | Indicate the starting angle of the data packet point |
+| Speed  | 2 Bytes | [least significant bit][LSB] before, </br> *unit: degrees per second* | Indicate the speed of the lidar |
+| Start Angle | 2 Bytes | [least significant bit][LSB] before, </br> *unit: 0.01 degrees* | Indicate the starting angle of the data packet point |
 | **Data** | 3 * 12 Bytes | ... | Please refer to the next section for further details. |
-| End angle | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: 0.01 degrees* | Indicate the end angle of the data packet point |
-| Timestamp | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: milliseconds*, </br> Reset to zero upon reaching `30000` | Indicating the timestamp value of the data packet |
+| End angle | 2 Bytes | [least significant bit][LSB] before, </br> *unit: 0.01 degrees* | Indicate the end angle of the data packet point |
+| Timestamp | 2 Bytes | [least significant bit][LSB] before, </br> *unit: milliseconds*, </br> Reset to zero upon reaching `30000` | Indicating the timestamp value of the data packet |
 | CRC check | 1 Bytes | Verification of all previous data *except itself* | Verifies data transfer for accuracy and completeness, ensuring error-free results. |
+
+> [!IMPORTANT]
+> We receive initial and final angles for every set of 12 points. The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation).
+
+### Understanding data packet
+
+Each of the 12 mesurement points per packet is composed of 2 values :
+
+|   Name   | Length  | Type or Value | Description |
+| :------: | :-----: | :-----------: | :---------- |
+| Distance | 2 Bytes | [least significant bit][LSB] before, </br> *unit: mm* | The distance to the detected point |
+| Intensity | 1 Byte | reflects the light reflection intensity | As the intensity increases, the signal intensity value also increases; conversely, as the intensity decreases, the signal intensity value decreases. For a white object within 6 meters, the typical signal strength value is approximately 200. |
+
+> [!IMPORTANT]
+> The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation).
 
 ## Links
 
@@ -64,3 +81,5 @@ The LD19 uses one-way communication. Once it is operating stably, it begins to s
 - [A better documentation.](https://www.elecrow.com/download/product/SLD06360F/LD19_Development%20Manual_V2.3.pdf) [(local version if the website remove the document)](./documents/LD19_Development_Manual_v2.5.pdf)
 
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/LudovaTech/lidar-LD19-tutorial">lidar-LD19-tutorial</a> (only the text and code of this document, not the images or the other files) by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/LudovaTech">LudovaTech (D'Artagnant)</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">CC BY-SA 4.0<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1" alt=""></a></p>
+
+[LSB]: https://en.wikipedia.org/wiki/Bit_numbering
