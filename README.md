@@ -40,7 +40,8 @@ The LD19 uses UART protocol for data communication with the following settings:
 > [!TIP]
 > For Arduino users, simply set the baud rate to `230400`. The other parameters are set to the correct values by default.
 
-> [!IMPORTANT] The Lidar LD19 begins transmitting measurement data as soon as its rotation stabilizes, which typically takes two to three seconds. There is no need to send any commands to initiate this process, and in fact, you cannot send any commands to do so.
+> [!IMPORTANT]
+> The Lidar LD19 begins transmitting measurement data as soon as its rotation stabilizes, which typically takes two to three seconds. There is no need to send any commands to initiate this process, and in fact, you cannot send any commands to do so.
 
 ## Links
 
