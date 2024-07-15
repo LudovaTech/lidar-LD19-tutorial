@@ -75,6 +75,10 @@ Each of the 12 mesurement points per packet is composed of 2 values :
 > [!IMPORTANT]
 > The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation). (Don't worry, it's very simple.)
 
+> [!NOTE]
+> The LD19 employs a left-handed coordinate system with the rotation center at the origin. The front of the sensor is designated as the zero-degree direction, and the rotation angle increases clockwise, as illustrated in the figure below.
+> ![Lidar Coordinate System](./images/lidar-coordinate-system.jpg)
+
 ## Links
 
 - [What seems to be the official documentation](https://wiki.youyeetoo.com/en/Lidar/D300)
