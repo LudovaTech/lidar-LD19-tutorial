@@ -24,10 +24,10 @@ From left to right, holding the lidar with the circular part facing upwards.
 
 | Name and Type |  Voltage  |   Comments   |
 | :------------ | :-------: | :----------- |
-| **Tx** (output UART), lidar data output at `230400` baud rate | 0V - 3.5V typical: 3.3V | This lidar only sends data, not receives it, hence the absence of an Rx port. |
+| **Tx** (output UART), lidar data output at `230400` baud rate | 0V - 3.5V </br> typical: 3.3V | This lidar only sends data, not receives it, hence the absence of an Rx port. |
 | **PWM** (input), control the speed of the built-in motor, the current lidar speed is indicated in the data sent | 0V - 3.3V | If manual control of the lidar speed is not required, the designated pin can be set to ground (GND) upon initiation of the lidar device and maintained in this state throughout its operation. (More informations on *manual* speed control in the [real documentation](#links))|
 | **GND** (power supply) | 0V | - |
-| **5V** (power supply) | 4.5V - 5.5V typical: 5V | - |
+| **5V** (power supply) | 4.5V - 5.5V </br> typical: 5V | - |
 
 The LD19 uses UART protocol for data communication with the following settings:
 
@@ -42,6 +42,21 @@ The LD19 uses UART protocol for data communication with the following settings:
 
 > [!IMPORTANT]
 > The Lidar LD19 begins transmitting measurement data as soon as its rotation stabilizes, which typically takes two to three seconds. There is no need to send any commands to initiate this process, and in fact, you cannot send any commands to do so.
+
+## Data protocol
+
+The LD19 uses one-way communication. Once it is operating stably, it begins to send measurement data packets automatically, without requiring any commands. There is 12 points per packet. The format of these measurement packets is illustrated in the table below.
+
+|  Name  | Length | Type or Value | Description |
+| :----: | :----: | :-----------: | :---------- |
+| Header | 1 Byte | Always `0x54` | Indicating the start of the data packet |
+| VerLen | 1 Byte | Always `0x2C` | The upper three bits of the byte specify the packet type, which is currently set to 1. The lower five bits represent the number of measurement points in a packet, which is fixed at 12. |
+| Speed  | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: degrees per second* | Indicate the speed of the lidar |
+| Start Angle | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: 0.01 degrees* | Indicate the starting angle of the data packet point |
+| **Data** | 3 * 12 Bytes | ... | Please refer to the next section for further details. |
+| End angle | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: 0.01 degrees* | Indicate the end angle of the data packet point |
+| Timestamp | 2 Bytes | [least significant bit](https://en.wikipedia.org/wiki/Bit_numbering) before, </br> *unit: milliseconds*, </br> Reset to zero upon reaching `30000` | Indicating the timestamp value of the data packet |
+| CRC check | 1 Bytes | Verification of all previous data *except itself* | Verifies data transfer for accuracy and completeness, ensuring error-free results. |
 
 ## Links
 
