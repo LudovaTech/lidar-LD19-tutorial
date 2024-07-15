@@ -61,7 +61,7 @@ The LD19 uses one-way communication. Once it is operating stably, it begins to s
 | CRC check | 1 Bytes | Verification of all previous data *except itself* | Verifies data transfer for accuracy and completeness, ensuring error-free results. |
 
 > [!IMPORTANT]
-> We receive initial and final angles for every set of 12 points. The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation).
+> We receive initial and final angles for every set of 12 points. The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation). (Don't worry, it's very simple.)
 
 ### Understanding data packet
 
@@ -73,7 +73,7 @@ Each of the 12 mesurement points per packet is composed of 2 values :
 | Intensity | 1 Byte | reflects the light reflection intensity | As the intensity increases, the signal intensity value also increases; conversely, as the intensity decreases, the signal intensity value decreases. For a white object within 6 meters, the typical signal strength value is approximately 200. |
 
 > [!IMPORTANT]
-> The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation).
+> The documentation advises using linear interpolation to determine the angles for each individual point. For detailed implementation steps, refer to the [Implementation section](#Implementation). (Don't worry, it's very simple.)
 
 ## Links
 
