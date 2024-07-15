@@ -24,10 +24,21 @@ From left to right, holding the lidar with the circular part facing upwards.
 
 | Name and Type |  Voltage  |   Comments   |
 | :------------ | :-------: | :----------- |
-| **Tx** (output), lidar data output at `230400` baud rate | 0V - 3.5V typical: 3.3V | This lidar only sends data, not receives it, hence the absence of an Rx port. |
-| **PWM** (input), control the speed of the built-in motor, the current lidar speed is indicated in the data sent | 0V - 3.3V | If manual control of the lidar speed is not required, the designated pin can be set to ground (GND) upon initiation of the lidar device and maintained in this state throughout its operation. |
+| **Tx** (output UART), lidar data output at `230400` baud rate | 0V - 3.5V typical: 3.3V | This lidar only sends data, not receives it, hence the absence of an Rx port. |
+| **PWM** (input), control the speed of the built-in motor, the current lidar speed is indicated in the data sent | 0V - 3.3V | If manual control of the lidar speed is not required, the designated pin can be set to ground (GND) upon initiation of the lidar device and maintained in this state throughout its operation. (More informations on *manual* speed control in the [real documentation](#links))|
 | **GND** (power supply) | 0V | - |
 | **5V** (power supply) | 4.5V - 5.5V typical: 5V | - |
+
+The LD19 uses UART protocol for data communication with the following settings:
+
+- **Baud Rate:** 230400
+- **Data Length:** 8 bits
+- **Stop Bit:** 1
+- **Parity:** None
+- **Flow Control:** None
+
+> [!TIP]
+> For Arduino users, simply set the baud rate to `230400`. The other parameters are set to the correct values by default.
 
 ## Links
 
