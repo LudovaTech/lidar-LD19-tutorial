@@ -1,5 +1,7 @@
 # Tutorial on LiDAR LD19
 
+[version en français](./README.fr.md)
+
 LD19 is a low cost LiDAR that we (LudovaTech team) used for the Robocup Junior competition. We find out that it works very well for our requirements but that there was no proper documentation or tutorial on the web. We succeeded to make it work after long days of work. Here is how we did it!
 
 > [!TIP]
