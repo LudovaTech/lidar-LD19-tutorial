@@ -1,5 +1,7 @@
 # Tutoriel LiDAR LD19
 
+[english version](./README.md)
+
 Le LD19 est un LiDAR peu coûteux et très efficace, mais il n’existe pas de documentation ou de tutoriel adéquat sur le web. J’ai néanmoins réussi à le faire fonctionner après de longues journées de travail. Voici comment j'y suis arrivé !
 
 > [!TIP]
